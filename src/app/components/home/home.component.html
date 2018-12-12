@@ -1,0 +1,9 @@
+<div style="text-align:center">
+  <h1>
+    Welcome to Nora's daily menu!
+  </h1>
+  <img width="300" alt="Angular Logo" src="assets/images/cornershop.png">
+  <div *ngIf="menu">
+    <h2><a routerLink="/menu/{{ menu.id }}">Menu for today</a></h2>
+  </div>
+</div>

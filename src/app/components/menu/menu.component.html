@@ -1,0 +1,20 @@
+<div style="text-align:center">
+  <h1>
+    Lunches for today!
+  </h1>
+</div>
+<ul *ngIf="menu && menu.lunches">
+  <li *ngFor="let lunch of menu.lunches">
+    <h2>{{ lunch.name }} <input type="radio" name="lunch" value="{{lunch.id}}" (change)="onFilterChange($event)"></h2>
+    <ul *ngIf="lunch && lunch.preparations">
+      <li *ngFor="let preparation of lunch.preparations">
+        <h3>{{ preparation.name }} </h3>
+        <h4>
+          (<span *ngFor="let ingredient of preparation.recipe; let isLast=last">
+            {{ ingredient.name }}{{isLast ? '' : ', '}}
+          </span>)
+        </h4>
+      </li>
+    </ul>
+  </li>
+</ul>
