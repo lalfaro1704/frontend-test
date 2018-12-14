@@ -12,6 +12,9 @@ import { ApiService } from '../../services/services';
 })
 export class MenuComponent implements OnInit {
   menu: JSON;
+  preparations: JSON;
+  ingredients: JSON;
+  exclude = [];
 
   constructor(private route: ActivatedRoute, private apiServices: ApiService) { }
 
@@ -32,8 +35,38 @@ export class MenuComponent implements OnInit {
     );
   }
 
-  onFilterChange(event) {
-    console.log(event.target.value);
+  getPreparationsByLunch(id) {
+    this.apiServices.getPreparationsByLunch(id).subscribe(
+      (data) => {
+        this.preparations = data;
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+
+  getIngredientsByPreparation(id) {
+    this.apiServices.getIngredientsByPreparation(id).subscribe(
+      (data) => {
+        console.log(data)
+        this.ingredients = data;
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+
+  ingredientsToExclude(category, event) {
+    var index = this.exclude.indexOf(event.target.value);
+    if (event.target.checked) {
+        this.exclude.push(event.target.value);
+     } else {
+        if (index !== -1) {
+            this.exclude.splice(index, 1);
+        }
+    }
   }
 
 }

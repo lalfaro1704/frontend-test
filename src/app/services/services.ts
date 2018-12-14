@@ -22,6 +22,22 @@ export class ApiService {
   getMenuById(id: string): Observable<any> {
     return this.http.get<any>(
       this.globalSettings.baseUrl + '/menu/api/menu/' + id + '/'
-    )
+    );
+  }
+
+  getPreparationsByLunch(id: string): Observable<any> {
+    return this.http.get<any>(
+      this.globalSettings.baseUrl + '/menu/api/preparation/?lunch=' + id
+    ).pipe(
+      map((response: Response) => <any>response['results'])
+    );
+  }
+
+  getIngredientsByPreparation(id: string): Observable<any> {
+    return this.http.get<any>(
+      this.globalSettings.baseUrl + '/menu/api/ingredient/?preparation=' + id
+    ).pipe(
+      map((response: Response) => <any>response['results'])
+    );
   }
 }

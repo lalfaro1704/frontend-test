@@ -5,7 +5,7 @@
 </div>
 <ul *ngIf="menu && menu.lunches">
   <li *ngFor="let lunch of menu.lunches">
-    <h2>{{ lunch.name }} <input type="radio" name="lunch" value="{{lunch.id}}" (change)="onFilterChange($event)"></h2>
+    <h2>{{ lunch.name }} <input type="radio" name="lunch" value="{{lunch.id}}" (change)="getPreparationsByLunch($event.target.value)"></h2>
     <ul *ngIf="lunch && lunch.preparations">
       <li *ngFor="let preparation of lunch.preparations">
         <h3>{{ preparation.name }} </h3>
@@ -18,3 +18,20 @@
     </ul>
   </li>
 </ul>
+<br>
+<div style="margin-left: 3%;">
+  <h1>
+    Get your order!
+  </h1>
+  <div *ngIf="preparations">
+    <h2>without this ingredient (per preparation):</h2>
+    <ng-template ngFor let-preparation [ngForOf]="preparations">
+      <h4><input type="radio" name="preparation" value="{{ preparation.id }}" (change)="getIngredientsByPreparation($event.target.value)"> {{ preparation.name }}</h4>
+    </ng-template>
+  </div>
+  <div *ngIf="ingredients">
+    <ng-template ngFor let-ingredient [ngForOf]="ingredients">
+      <h4><input type="checkbox" value="{{ ingredient.id }}" (change)="ingredientsToExclude($event)"> {{ ingredient.name }}</h4>
+    </ng-template>
+  </div>
+</div>
