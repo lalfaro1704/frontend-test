@@ -12,13 +12,15 @@ import { HomeComponent } from './components/home/home.component';
 // my services
 import { ApiService } from './services/services';
 import { GlobalSettings } from './services/global.settings';
+import { IsChecked } from './services/checked.pipe';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     MenuComponent,
-    HomeComponent
+    HomeComponent,
+    IsChecked
   ],
   imports: [
     BrowserModule,

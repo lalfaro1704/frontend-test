@@ -1,6 +1,6 @@
 // standard libraries
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 // components and services
 import { ApiService } from '../../services/services';
@@ -13,10 +13,13 @@ import { ApiService } from '../../services/services';
 export class MenuComponent implements OnInit {
   menu: JSON;
   preparations: JSON;
+  id_preparation: string;
   ingredients: JSON;
+  id_lunch: string;
   exclude = [];
+  exclutions = [];
 
-  constructor(private route: ActivatedRoute, private apiServices: ApiService) { }
+  constructor(private route: ActivatedRoute, private apiServices: ApiService, private router: Router) { }
 
   ngOnInit() {
     this.getMenuById();
@@ -36,9 +39,11 @@ export class MenuComponent implements OnInit {
   }
 
   getPreparationsByLunch(id) {
+    this.id_lunch = id;
     this.apiServices.getPreparationsByLunch(id).subscribe(
       (data) => {
         this.preparations = data;
+        this.exclutions = [];
       },
       error => {
         console.log(error);
@@ -47,9 +52,9 @@ export class MenuComponent implements OnInit {
   }
 
   getIngredientsByPreparation(id) {
+    this.id_preparation = id;
     this.apiServices.getIngredientsByPreparation(id).subscribe(
       (data) => {
-        console.log(data)
         this.ingredients = data;
       },
       error => {
@@ -58,15 +63,50 @@ export class MenuComponent implements OnInit {
     );
   }
 
-  ingredientsToExclude(category, event) {
-    var index = this.exclude.indexOf(event.target.value);
+  ingredientsToExclude(event) {
+    let isnew = true;
     if (event.target.checked) {
-        this.exclude.push(event.target.value);
-     } else {
-        if (index !== -1) {
-            this.exclude.splice(index, 1);
+      for (const exclution of this.exclutions){
+        if (exclution.id_preparation === this.id_preparation){
+          exclution.ingredients.push(event.target.value);
+          isnew = false;
         }
+      }
+      if (isnew) {
+        this.exclutions.push({
+          id_preparation: this.id_preparation,
+          ingredients: [event.target.value]
+        })
+      }
+    } else {
+      for (const exclution of this.exclutions){
+        if (exclution.id_preparation === this.id_preparation){
+          var index = exclution.ingredients.indexOf(event.target.value);
+          if (index !== -1) {
+            exclution.ingredients.splice(index, 1);
+          }
+        }
+      }
     }
+  }
+
+  submit(user) {
+    const body = {
+      user: user.value,
+      lunch: this.id_lunch,
+      exclutions: this.exclutions
+    }
+    /*const formData = new FormData();
+    formData.append('preparation', this.id_preparation);
+    formData.append('ingredients', JSON.stringify(this.exclude));*/
+    this.apiServices.postOrder(body).subscribe(
+      (data) => {
+        this.router.navigate(['/']);
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
 
 }

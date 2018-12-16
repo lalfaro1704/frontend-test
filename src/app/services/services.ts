@@ -40,4 +40,11 @@ export class ApiService {
       map((response: Response) => <any>response['results'])
     );
   }
+
+  postOrder(body: any): Observable<any> {
+    return this.http.post<any>(
+      this.globalSettings.baseUrl + '/menu/api/order/',
+      body
+    );
+  }
 }
